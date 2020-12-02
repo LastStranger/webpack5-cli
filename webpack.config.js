@@ -2,17 +2,18 @@
 const { resolve } = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   // entry: './src/index.js',
   output: {
-    filename: '[name].js',
+    filename: 'js/[name].js',
     path: resolve(__dirname, 'dist'),
     // publicPath: '/ver/'
     // publicPath: './'
     publicPath: ''
   },
-  // mode: "development",
+  mode: "development",
   // mode: "production"
   module: {
     rules: [
@@ -44,15 +45,24 @@ module.exports = {
         options: {
           limit: 8 * 1024,
           name: '[hash:10].[ext]',
+          outputPath: 'assets'
         }
       }
     ]
   },
   plugins: [
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html'
     })
   ],
+  devServer: {
+    contentBase: resolve(__dirname, 'dist'),
+    compress: true,
+    port: 2345,
+    open: true,
+    // contentBase: './dist'
+  },
   devtool: 'source-map' // 开发环境下帮助直接进入源代码位置
 }
